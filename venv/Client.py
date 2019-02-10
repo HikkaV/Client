@@ -8,6 +8,7 @@ class Client(object):
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
+        self.buf_size = 40960000
 
     def send_image(self, path):
 
@@ -20,22 +21,19 @@ class Client(object):
                 command = str(input())
 
             self.sock.send(bytes(command, "utf8"))
-            if not command in commands:
-                print(self.sock.recv(4096).decode("utf8"))
             if command == "quit":
-                print(self.sock.recv(4096).decode("utf8"))
+                print(self.sock.recv(self.buf_size).decode("utf8"))
                 break
             with open(path, 'rb') as f:
                 mybytes = f.read()
                 self.sock.send(mybytes)
-            answear = self.sock.recv(4096).decode("utf8")
-            if answear == 'GOT IMAGE':
+            answear = self.sock.recv(self.buf_size).decode("utf8")
+            if answear == 'Got image':
                 print('The image was successfully sent')
-                self.sock.send(bytes("let's go", "utf8"))
             else:
                 continue
             f.close()
-            print(self.sock.recv(4096).decode("utf8"))
-            prediction = self.sock.recv(4096).decode("utf8")
+            print(self.sock.recv(self.buf_size).decode("utf8"))
+            prediction = self.sock.recv(self.buf_size).decode("utf8")
             print(prediction)
         self.sock.close()
