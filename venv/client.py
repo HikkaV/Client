@@ -1,5 +1,5 @@
 import socket
-from Settings import *
+from settings import *
 
 
 class Client(object):

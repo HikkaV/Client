@@ -1,7 +1,7 @@
-import Client
-from Client import Client
+import client
+from client import Client
 from threading import Thread
-from Settings import *
+from settings import *
 if __name__ == '__main__':
     host = host_
     port = port_
